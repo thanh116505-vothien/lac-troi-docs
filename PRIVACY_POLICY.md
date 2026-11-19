@@ -1,70 +1,77 @@
-# Privacy Policy for Lạc Trôi~,~
+# Privacy Policy for Lạc Trôi
 
-**Effective Date:** November 18, 2026  
-**Developer:** VoThien (thanh116505-vothien)  
-**Application Name:** Lạc Trôi~,~
+Last updated: November 20, 2026
 
----
+Application ID: `1572430859955474503`  
+Operator: VoThien  
+Contact on Discord: `vothien0143`
 
-## 1. Introduction
-This Privacy Policy explains how the Discord bot **Lạc Trôi~,~** ("the Bot"), created and operated by **VoThien**, collects, uses, processes, and protects user data and interactions. By using the Bot or inviting it to your Discord server, you agree to the practices outlined in this policy.
+## 1. What the bot does
 
----
+Lạc Trôi helps a Vietnamese Discord community discover game translation posts, submit and track translation requests, manage registered bot accounts, and use activity points and virtual items. It also supports optional donation receipts and administrator mention alerts.
 
-## 2. Information We Collect and Process
-The Bot is designed with a strict privacy-first principle. To provide its core features, the Bot processes only the following data:
+Users initiate registration and personal workflows through one-to-one direct messages and buttons. Registration uses Discord identity; the bot does not ask users to create a password. Scheduled game suggestions are posted in a configured server channel. The current version does not send periodic game recommendation DMs to a subscriber list.
 
-### a. Opt-in Mention Notifications (DM Alerts)
-- **Data processed:** User IDs, author display names, channel names, and real-time message snippet snippets containing mentions.
-- **Purpose:** When a user explicitly opts in using the `/dangky` command, their Discord User ID is stored in a local database (`dm_subscribers`). When someone mentions that user in a server channel, the Bot delivers a private Direct Message (DM) alert with a link jumping directly to the message.
-- **Opt-out:** Users can cancel anytime using `/huydangky`, which immediately removes their User ID from the database.
+## 2. Data processed and why
 
-### b. Scheduled & On-Demand Game Recommendations
-- **Data processed:** User IDs and publicly available forum/game thread titles.
-- **Purpose:** Users who opt in via `/dangkygoiy` have their User ID stored in `suggest_subscribers` to receive 5 random game recommendations via 1-on-1 private DM every 3 hours. On-demand suggestions (`/goiy`) do not require subscription.
-- **Opt-out:** Users can turn off recommendations anytime using `/huygoiy`.
+### Discord identity and access information
 
-### c. Watched Channels (`watched_channels`)
-- **Data processed:** Server (Guild) IDs and Channel IDs.
-- **Purpose:** Server administrators use `/dangkykenh` to select forum or game channels as sources for recommendations. The Bot reads thread titles and URLs in memory to provide game recommendations without modifying or reopening archived threads.
+The bot processes Discord user IDs, usernames/display names, guild and channel IDs, roles, and membership information. It uses server permissions, private-thread membership, and configured bot account levels to determine available features and catalog results. Role and membership events invalidate cached permission information. Certain administrators and translators have additional access under the bot's account-level rules.
 
-### d. In-Memory Game Search
-- **Data processed:** Search query keywords entered by users in private DMs.
-- **Purpose:** Queries are processed in runtime memory using fuzzy search and acronym resolution to return relevant game threads. Search queries are not written to disk or permanent databases.
+Registered account IDs, usernames, account levels, registration status, and registration timestamps are stored in a local SQLite database. Role/member objects and permission caches are used in application memory.
 
-### e. Automated DM Self-Cleanup
-- **Protection:** All recommendation and notification messages sent by the Bot to users via 1-on-1 DMs are scheduled to automatically delete themselves after a configurable time window (default 3 hours) to keep user direct message boxes clean and clutter-free.
+### Configured game catalog and searches
 
-### f. Anti-Spam Protection
-- **Data processed:** User IDs and timestamp of command execution.
-- **Purpose:** Temporary rate-limiting records (`spam_locks`) are maintained to prevent bot abuse, denial of service, and spam attacks.
+Administrators select the server channels and forums used as catalog sources. The bot reads thread titles and original post links. In supported text channels, it can use the first line of a member-authored message as an entry title. It reads image attachments and image embeds from source posts and, when needed, early thread messages to display an image in a game card.
 
----
+Catalog metadata, image URLs, and search queries are processed in memory. Search query text is not intentionally written to a search-history table. The points system does store limited records of game IDs explored by a registered user on a given day. Donation-receipt channels are excluded from catalog sources.
 
-## 3. Data We Do NOT Collect
-- We **do not** collect, store, or log general chat message histories or private user conversations.
-- We **do not** collect personal information such as real names, passwords, email addresses, IP addresses, or payment credentials.
-- We **do not** sell, trade, rent, or share any user data with external advertisers, brokers, or third parties.
+The bot receives Discord message events and uses a bounded message cache. It does not maintain a general archive of server conversations.
 
----
+### Translation requests and community features
 
-## 4. Data Storage and Security
-- All user preferences and channel configurations are stored exclusively in a secure, local SQLite database (`bot_data.db`) on a private host server.
-- No data is transmitted to external cloud databases, analytics providers, or unauthenticated remote endpoints.
+The bot stores request/thread IDs, requester and translator IDs, requested game titles, processing status, and completion-notification progress. User-submitted request text, links, and images are used to create the requested forum post. Upload images are temporarily saved on disk while a posting session is active and are removed when that session is completed, cancelled, or expires during normal operation.
 
----
+Activity points and virtual items require stored balances, point events and dates, explored game IDs, inventory records, game titles in item orders, order status, and the user IDs involved. Points are not a cash balance. Leaderboards, forum requests, and completed actions may be visible to other Discord users through the bot's corresponding features.
 
-## 5. User Rights and Data Deletion
-Users retain full control over their data at all times:
-- Use `/huydangky` to immediately remove your User ID from mention notifications.
-- Use `/huygoiy` to immediately remove your User ID from periodic game recommendations.
-- Server administrators can remove indexed channels anytime using `/huydangkykenh` or by removing the Bot from their server.
-- You can contact the developer directly to request complete manual deletion of any remaining cached preferences.
+### Optional donations and receipt images
 
----
+Donation-recipient profiles contain the recipient's display/account name, account number or payment reference, QR image, Discord username, and configured acknowledgement channel. These details are displayed when a user chooses that recipient.
 
-## 6. Contact Information
-If you have any questions, concerns, or requests regarding this Privacy Policy, please contact:
-- **Developer:** VoThien
-- **Discord Tag / Username:** `vothien0143`
-- **GitHub:** [https://github.com/thanh116505-vothien](https://github.com/thanh116505-vothien)
+Users may voluntarily submit a receipt image in a DM after choosing a recipient. Such an image can contain personal or financial details. The bot downloads it to local storage for validation and image processing. Where Tesseract is installed, OCR is performed locally. The bot attempts to obscure receipt details before posting the processed image and a donor acknowledgement in the selected recipient's configured server channel. Automated redaction can make mistakes, so users should obscure information they do not want shared before submitting an image.
+
+The original receipt file is removed from active application storage after successful publication or processing rejection. Images awaiting delivery can remain queued through retries; there is no guaranteed 30-day expiry for every pending receipt. Minimal metadata, including donor ID, recipient key, timestamps, filename/hash, and status, can remain for acknowledgement, duplicate detection, and operational records. Copies posted on Discord have a separate lifecycle.
+
+The bot does not execute bank transfers or request a banking password, OTP, or payment-card credential.
+
+### Optional mention alerts and abuse prevention
+
+Registered bot administrators can enable or disable their own mention alerts using the administrator controls or the DM messages `bật mention` and `tắt mention`. An enabled alert forwards the mentioning message's available text snippet, author/channel information, and original-message link to that administrator, subject to the implemented access checks.
+
+Rate limiting and abuse prevention process user IDs, action times, strike counts, lock status, and reasons. Diagnostic logs can include Discord IDs, processing errors, and error context. The application log is rotated by size; hosting-system logs have a separately administered lifecycle.
+
+## 3. Storage, retention, and security
+
+Persistent bot data is stored in SQLite and local files on the operator's host. Some operational records can remain longer than 30 days. The current application does not enforce automatic 30-day deletion for all accounts, requests, point records, orders, receipt metadata, or pending files.
+
+The bot attempts to delete its own DM messages after the configured cleanup interval when that feature is enabled. Cleanup can be delayed by outages or Discord permissions/API errors. It does not delete the user's incoming DM messages, and it does not replace deletion of database records.
+
+The current application does not implement its own encryption of the SQLite database or stored upload/receipt files. This policy does not claim that hosting volumes or backups are encrypted; that must be separately established by the operator. Older manual backups, if present, require separate handling when processing a deletion request.
+
+## 4. Disclosure and external services
+
+The bot uses Discord's API and media infrastructure to receive messages and deliver results. Content intentionally posted through a feature is visible according to the destination channel or DM. Donation acknowledgements can include the donor's Discord identity and a processed receipt. Translation requests can include the requester's Discord identity and the content they chose to submit.
+
+The current application does not use message data to train AI or machine-learning models, sell data, or provide it to advertising/data-broker services. Receipt OCR, when available, runs locally rather than through an external OCR API. External links in catalog entries lead to independently operated services with their own privacy practices.
+
+## 5. Choices and deletion requests
+
+Users can choose not to register, stop initiating personal bot workflows, cancel an active input session with `hủy`, and avoid optional donation uploads. Eligible administrators can disable their own mention notifications. Administrators can remove channels from the configured catalog sources or remove the bot to stop its future access to their server.
+
+There is currently no automatic per-author exclusion setting for messages in an indexed catalog channel and no automated command that erases all stored account data. Stopping use or removing the bot does not automatically erase all existing records or content already posted on Discord.
+
+To request deletion or discuss a catalog/privacy concern, send a Discord DM to **`vothien0143`**. Include your Discord user ID, identify Lạc Trôi with application ID **`1572430859955474503`**, and specify the records or content concerned. Requests are handled manually by the operator. Identity or scope may need to be confirmed before changing records. Records connected to other users, shared completed transactions, abuse prevention, existing Discord posts, and older backups may require separate review and handling; the operator will explain any limitations rather than promise automatic or immediate erasure.
+
+## 6. Changes and contact
+
+The operator updates this policy when the bot's data practices change. Questions and requests can be sent to **`vothien0143`** on Discord.
